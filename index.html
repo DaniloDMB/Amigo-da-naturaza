@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jogo de Reciclagem</title>
+    <style>
+      .container {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px;
+      }
+      .lixeira {
+        width: 100px;
+        height: 100px;
+        border: 2px solid black;
+        position: relative;
+        background-image: url("./lixeira\ aberta.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        overflow: hidden;
+      }
+      .item {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+      }
+      #placar {
+        margin: 20px;
+        font-size: 20px;
+      }
+      .hovered {
+        border: 2px dashed red;
+        background-image: url("./Lixeira\ fechada.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background-image: url("fundo.jpeg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      #certificado {
+        display: none;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/10;
+        background-image: url("./certificado.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      #certificado p {
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 500;
+      }
+
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+
+        #certificado,
+        #certificado * {
+          visibility: visible;
+          /* Torna o certificado e seu conteúdo visíveis */
+        }
+
+        #certificado {
+          display: block;
+          position: absolute; /* Remove a posição relativa */
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: auto;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+
+        /* Esconde o botão de impressão na impressão */
+        #certificado button {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Jogo de Reciclagem</h1>
+    <p>
+      Nome do Jogador:
+      <input type="text" id="nomeJogador" placeholder="Seu nome" />
+    </p>
+    <div id="placar">Pontos: 0</div>
+    <div class="container">
+      <div class="lixeira" id="lixeira_papel"></div>
+      <div class="lixeira" id="lixeira_vidro"></div>
+      <div class="lixeira" id="lixeira_metal"></div>
+      <div class="lixeira" id="lixeira_plastico"></div>
+    </div>
+    <div id="itens">
+      <img src="papel amassado.jpeg" class="item" id="papel" draggable="true" />
+      <img src="vidro quebrado.png" class="item" id="vidro" draggable="true" />
+      <img src="metal amassado.jpeg" class="item" id="metal" draggable="true" />
+      <img src="plastico.jpeg" class="item" id="plastico" draggable="true" />
+    </div>
+    <div id="certificado"></div>
+
+    <script>
+      let pontos = 0;
+      const nomeJogador = document.getElementById("nomeJogador");
+      const placar = document.getElementById("placar");
+      placar.innerText = `Pontos: ${pontos}`;
+
+      document.querySelectorAll(".item").forEach((item) => {
+        item.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text", e.target.id);
+          console.log(`Drag Start: ${e.target.id}`);
+        });
+      });
+
+      document.querySelectorAll(".lixeira").forEach((lixeira) => {
+        lixeira.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          lixeira.classList.add("hovered");
+        });
+
+        lixeira.addEventListener("dragleave", () => {
+          lixeira.classList.remove("hovered");
+        });
+
+        lixeira.addEventListener("drop", (e) => {
+          e.preventDefault();
+          lixeira.classList.remove("hovered");
+
+          const idItem = e.dataTransfer.getData("text");
+          const item = document.getElementById(idItem);
+
+          const tipoLixeira = lixeira.id.replace("lixeira_", "");
+          const tipoItem = item.id;
+          const condicao = tipoLixeira === tipoItem;
+          console.log(`Condição: ${condicao}`, tipoLixeira, tipoItem);
+
+          if (condicao) {
+            if (pontos < 3) {
+              pontos++;
+            }
+
+            if (pontos === 3) {
+              document.getElementById("certificado").style.display = "flex";
+              document.getElementById("certificado").innerHTML = `
+                            <p id="certificado-nome">${nomeJogador.value}</p>
+                            <br /><button onClick="window.print()">Imprimir</button>`;
+            }
+          } else {
+            if (pontos > 0) pontos--;
+          }
+
+          placar.innerText = `Pontos: ${pontos}`;
+        });
+      });
+    </script>
+  </body>
+</html>
