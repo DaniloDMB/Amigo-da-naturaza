@@ -20,15 +20,20 @@
         background-position: center;
         overflow: hidden;
       }
-      .item {
+        .item {
+        border: 2px solid #000;
         width: 50px;
         height: 50px;
         cursor: pointer;
+        margin: 60px;
+        float: right;
       }
       #placar {
         margin: 20px;
         font-size: 20px;
-      }
+        text-align: center;
+        color: #ca0f0f;
+        }
       .hovered {
         border: 2px dashed red;
         background-image: url("./Lixeira\ fechada.png");
@@ -39,11 +44,11 @@
       body {
         width: 100vw;
         height: 100vh;
-        overflow: hidden;
         background-image: url("fundo.jpeg");
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
+        /*overflow: scroll;*/
       }
 
       #certificado {
@@ -55,13 +60,19 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
+        width: 800px;
+        height: 600px;
+        border: 2px solid black;
+        background-size: auto 100%;
+        overflow: hidden;
+        
       }
 
       #certificado p {
         width: auto;
         height: auto;
         position: absolute;
-        top: 100px;
+        top: 150px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 500;
@@ -79,7 +90,7 @@
         }
 
         #certificado {
-          display: block;
+          display: flex;
           position: absolute; /* Remove a posição relativa */
           left: 0;
           top: 0;
@@ -88,8 +99,8 @@
           background-size: cover;
           background-repeat: no-repeat;
           background-position: center;
-        }
-
+          
+        }       
         /* Esconde o botão de impressão na impressão */
         #certificado button {
           display: none;
@@ -98,23 +109,23 @@
     </style>
   </head>
   <body>
-    <h1>Jogo de Reciclagem</h1>
-    <p>
+    <h1 style="color: rgb(14, 14, 13); font-size: 36px; text-align: center;">Jogo de Reciclagem</h1>
+    <p style="color: rgb(14, 14, 13); font-size: 26px; text-align: center;">
       Nome do Jogador:
-      <input type="text" id="nomeJogador" placeholder="Seu nome" />
+      <input style="color: rgb(224, 78, 15); font-size: 26px; text-align: center;" type="text" id="nomeJogador" placeholder="Seu nome" />
     </p>
     <div id="placar">Pontos: 0</div>
     <div class="container">
-      <div class="lixeira" id="lixeira_papel"></div>
-      <div class="lixeira" id="lixeira_vidro"></div>
-      <div class="lixeira" id="lixeira_metal"></div>
-      <div class="lixeira" id="lixeira_plastico"></div>
+      <div class="lixeira" id="lixeira_papel">Papel</div>
+      <div class="lixeira" id="lixeira_vidro">Vidro</div>
+      <div class="lixeira" id="lixeira_metal">Metal</div>
+      <div class="lixeira" id="lixeira_plastico">Plástico</div>
     </div>
     <div id="itens">
-      <img src="papel amassado.jpeg" class="item" id="papel" draggable="true" />
-      <img src="vidro quebrado.png" class="item" id="vidro" draggable="true" />
+      <img src="plastico.jpeg" class="item" id="plastico" draggable="true" />      
       <img src="metal amassado.jpeg" class="item" id="metal" draggable="true" />
-      <img src="plastico.jpeg" class="item" id="plastico" draggable="true" />
+      <img src="vidro quebrado.png" class="item" id="vidro" draggable="true" /> 
+      <img src="papel amassado.jpeg" class="item" id="papel" draggable="true" />     
     </div>
     <div id="certificado"></div>
 
@@ -154,15 +165,16 @@
           console.log(`Condição: ${condicao}`, tipoLixeira, tipoItem);
 
           if (condicao) {
-            if (pontos < 3) {
+            if (pontos < 10) {
               pontos++;
             }
 
-            if (pontos === 3) {
+            if (pontos === 10) {
               document.getElementById("certificado").style.display = "flex";
               document.getElementById("certificado").innerHTML = `
                             <p id="certificado-nome">${nomeJogador.value}</p>
                             <br /><button onClick="window.print()">Imprimir</button>`;
+                           
             }
           } else {
             if (pontos > 0) pontos--;
